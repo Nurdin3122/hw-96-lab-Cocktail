@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import Cocktail from "../models/Cocktails";
 import auth, {RequestWithUser} from "../middleware/auth";
 import {imagesUpload} from "../multer";
+import permit from "../middleware/permit";
 
 const cocktailsRouter = express.Router();
 
@@ -14,8 +15,18 @@ cocktailsRouter.get('/',async (req:Request,res:Response,next:NextFunction):Promi
     }
 });
 
+cocktailsRouter.get('/published', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const publishedCocktails = await Cocktail.find({ isPublished: true });
+        res.status(200).send(publishedCocktails);
+    } catch (error) {
+        return next(error);
+    }
+});
 
-cocktailsRouter.get('/:id', auth,async (req:Request,res:Response,next:NextFunction):Promise<void>=> {
+
+
+cocktailsRouter.get('/:id',async (req:RequestWithUser,res:Response,next:NextFunction):Promise<void>=> {
     try {
         const { id } = req.params;
         const cocktail = await Cocktail.findById(id);
@@ -29,7 +40,7 @@ cocktailsRouter.get('/:id', auth,async (req:Request,res:Response,next:NextFuncti
          return next(error)
     }
 
-})
+});
 
 cocktailsRouter.post('/',auth,imagesUpload.single('image'),async (req:RequestWithUser,res:Response,next:NextFunction) => {
     try {
@@ -56,11 +67,48 @@ cocktailsRouter.post('/',auth,imagesUpload.single('image'),async (req:RequestWit
             ingredient:ingredients
         });
         await cocktail.save();
-        console.log(cocktail)
         res.status(201).send(cocktail);
     } catch (error) {
         return next(error);
     }
 });
+
+cocktailsRouter.delete("/:id", auth, permit('admin'), async (req:RequestWithUser,res:Response,next:NextFunction):Promise<void> => {
+    try {
+        const cocktailID = req.params.id;
+        await Cocktail.deleteOne({ _id: cocktailID });
+         res.status(200).send({ message: 'Cocktail deleted successfully' });
+        return
+    } catch (error) {
+         res.status(500).send({ error: 'Failed to delete cocktail' });
+        return
+    }
+});
+
+
+cocktailsRouter.patch("/:id/togglePublished", auth, permit("admin"), async (req:RequestWithUser,res:Response,next:NextFunction):Promise<void> => {
+    try {
+        const id = req.params.id;
+        const cocktail = await Cocktail.findById(id);
+
+        if (!cocktail) {
+             res.status(404).send({ message: 'Cocktail not found' });
+            return
+        }
+
+        cocktail.isPublished = !cocktail.isPublished;
+        await cocktail.save();
+
+         res.status(200).send(cocktail);
+        return
+    } catch (error) {
+         res.status(500).send({ message: 'Something went wrong' });
+        return
+    }
+});
+
+
+
+
 
 export default cocktailsRouter;

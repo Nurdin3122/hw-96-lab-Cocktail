@@ -1,10 +1,10 @@
 import React from 'react';
-import BlockCocktails from "../Components/Cocktails/BlockCocktails";
+import BlockCocktailsIsPublished from "../Components/Cocktails/BlockCocktailsIsPublished";
 
 const Body = () => {
     return (
         <div className="container-fluid">
-            <BlockCocktails/>
+            <BlockCocktailsIsPublished/>
         </div>
     );
 };

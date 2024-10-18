@@ -1,9 +1,9 @@
 import {RequestWithUser} from "./auth";
-import {NextFunction, Response} from "express";
+import {NextFunction, Response , Request} from "express";
 
 const permit = (...roles: string[]) => {
-    return (expressReq: Request, res: Response, next: NextFunction) => {
-        const req = expressReq as RequestWithUser;
+    return (req: RequestWithUser, res: Response, next: NextFunction) => {
+
         if (!req.user) {
              res.status(401).send({error: 'Unauthenticated'});
             return

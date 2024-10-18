@@ -1,22 +1,23 @@
 import React, {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {cocktailLoading, cocktailState} from "./CocktailsSlice";
-import {getAllCocktails} from "./CocktailsThunks";
+import {cocktailLoading,isPublishedCocktails} from "./CocktailsSlice";
+import {getPublishedCocktails} from "./CocktailsThunks";
 import Spinner from "../Spinner/Spinner";
 import CocktailItem from "./CocktailItem";
 
-const BlockCocktails = () => {
+const BlockCocktailsIsPublished = () => {
     const dispatch = useAppDispatch();
-    const cocktails = useAppSelector(cocktailState);
+    const cocktails = useAppSelector(isPublishedCocktails);
     const loadingCocktails = useAppSelector(cocktailLoading);
 
     useEffect(() => {
-        dispatch(getAllCocktails()).unwrap();
+        dispatch(getPublishedCocktails()).unwrap();
     }, [dispatch]);
+
     return (
-        <div className="container-fluid ">
-            <h4 className="text-center">My cocktails</h4>
-            <div className=" d-flex justify-content-center flex-wrap">
+        <div className="container-fluid">
+
+            <div className="d-flex justify-content-center flex-wrap">
                 {
                     loadingCocktails ? (
                         <Spinner/>
@@ -37,4 +38,4 @@ const BlockCocktails = () => {
     );
 };
 
-export default BlockCocktails;
+export default BlockCocktailsIsPublished;

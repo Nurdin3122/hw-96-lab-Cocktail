@@ -33,25 +33,61 @@ export const createCocktail = createAsyncThunk<void,CocktailMutation>(
 );
 
 export const getAllCocktails = createAsyncThunk<Cocktail[]>(
-    "cocktails/getAllCocktails",
+    "cocktail/getAllCocktails",
     async () => {
         const response = await axiosApi.get('/cocktails');
         return response.data
     }
 );
 
+export const getPublishedCocktails = createAsyncThunk<Cocktail[]>(
+    "cocktail/getPublishedCocktails",
+    async () => {
+        const response = await axiosApi.get('/cocktails/published');
+        return response.data;
+    }
+);
+
 export const getOneCocktail = createAsyncThunk<Cocktail>(
-    "cocktails/getOneCocktail",
+    "cocktail/getOneCocktail",
     async (id) => {
+
+        const response = await axiosApi.get(`/cocktails/${id}`)
+        return response.data
+    }
+);
+
+export const isPublishedCocktail = createAsyncThunk(
+    "cocktail/isPublishedCocktail",
+    async (id:string) => {
         const user = localStorage.getItem('persist:cocktail-app:user');
         const UserJsonParse = JSON.parse(user);
         const token = JSON.parse(UserJsonParse.user)
 
-        const response = await axiosApi.get(`/cocktails/${id}`,{
+        const response = await axiosApi.patch(`/cocktails/${id}/togglePublished`, {},{
             headers: {
                 Authorization: `Bearer ${token.token}`
             }
-        })
-        return response.data
+        });
+        return response.data;
     }
-)
+);
+
+
+
+export const deleteCocktail = createAsyncThunk(
+    "cocktail/deleteCocktail",
+    async (id:string) => {
+        const user = localStorage.getItem('persist:cocktail-app:user');
+        const UserJsonParse = JSON.parse(user);
+        const token = JSON.parse(UserJsonParse.user)
+
+        const response = await axiosApi.delete(`/cocktails/${id}`,{
+            headers:{
+                Authorization: `Bearer ${token.token}`
+            }
+        });
+        return response.data;
+    }
+);
+

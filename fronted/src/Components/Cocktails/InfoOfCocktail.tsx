@@ -32,7 +32,7 @@ const InfoOfCocktail = () => {
                     <Spinner/>
                 ) : (
                     <div className="container-fluid d-flex flex-column" style={{minHeight: "100vh"}}>
-                        <div className="block-1 d-flex justify-content-around mt-auto">
+                        <div className="mb-5 d-flex justify-content-around mt-auto">
                             <div>
                                 <img src={`${cardImage}`} alt={`${cocktail.name}`} style={{
                                     height: "250px",
@@ -60,7 +60,7 @@ const InfoOfCocktail = () => {
 
                             </div>
                         </div>
-                        <div className="block-2 mb-auto">
+                        <div className="mt-5 mb-auto">
                             <span style={{fontSize: "16px"}}>Recipe:</span>
                             <p>
                                 {cocktail.recipe}
