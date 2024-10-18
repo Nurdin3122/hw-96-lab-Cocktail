@@ -6,7 +6,6 @@ import { imagesUpload } from "../multer";
 import bcrypt from "bcrypt";
 
 const usersRouter = express.Router();
-
 usersRouter.post('/', imagesUpload.single('image'), async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const user = new User({
@@ -43,7 +42,7 @@ usersRouter.post('/sessions', async (req: Request, res: Response, next: NextFunc
         }
         user.token = randomUUID();
         await user.save()
-         res.send(user);
+        res.send(user);
     } catch (error) {
         if (error instanceof Error.ValidationError) {
             res.status(400).send(error.message);
@@ -51,7 +50,33 @@ usersRouter.post('/sessions', async (req: Request, res: Response, next: NextFunc
             next(error);
         }
     }
-
 });
 
+usersRouter.delete('/sessions', async (req:Request, res:Response, next:NextFunction):Promise<void> => {
+    try {
+        const header = req.get('Authorization');
+        if (!header || !header.startsWith('Bearer ')) {
+             res.status(401).send({error: 'Token not provided!'});
+            return
+        }
+        const token = header.split(' ')[1];
+        const success = {message: 'Success'};
+        if (!token)  {
+            res.send(success)
+            return
+        }
+        const user = await User.findOne({token});
+        if (!user){
+            res.send(success);
+            return
+        }
+
+        user.token = "";
+        user.save();
+
+        res.send(success);
+    } catch (e) {
+        return next(e);
+    }
+});
 export default usersRouter;

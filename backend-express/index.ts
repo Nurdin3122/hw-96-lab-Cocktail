@@ -3,13 +3,14 @@ import express from 'express';
 import  mongoose from "mongoose";
 import config from "./config";
 import usersRouter from "./routers/usersRouter";
+import path from "path";
 
 
 const app = express();
 const port = 8030;
 
 
-app.use(express.static('public'));
+app.use(express.static(path.join(config.publicPath, 'images')));
 app.use(cors());
 app.use(express.json());
 app.use('/users',usersRouter);
