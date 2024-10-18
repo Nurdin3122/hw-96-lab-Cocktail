@@ -57,8 +57,5 @@ export const UserSlice = createSlice<userState>({
 });
 
 export const {unsetUser} = UserSlice.actions;
-
 export const UserReducer = UserSlice.reducer;
-export const loadingUserState = (state: RootState) => state.user.loading;
-export const registerErrorState = (state:RootState) => state.user.registerError;
 export const userState = (state: RootState) => state.user.user;

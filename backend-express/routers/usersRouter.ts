@@ -76,7 +76,7 @@ usersRouter.delete('/sessions', async (req:Request, res:Response, next:NextFunct
 
         res.send(success);
     } catch (e) {
-        return next(e);
+        return next(e)
     }
 });
 export default usersRouter;

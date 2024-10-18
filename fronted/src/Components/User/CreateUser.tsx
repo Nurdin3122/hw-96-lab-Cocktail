@@ -96,7 +96,7 @@ const CreateUser = () => {
                 </div>
 
                 <div className="d-flex justify-content-center">
-                    <button type="submit" className="btn btn-danger">Login</button>
+                    <button type="submit" className="btn btn-danger">Create</button>
                 </div>
 
             </form>

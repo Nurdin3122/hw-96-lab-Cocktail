@@ -4,6 +4,7 @@ import  mongoose from "mongoose";
 import config from "./config";
 import usersRouter from "./routers/usersRouter";
 import path from "path";
+import cocktailsRouter from "./routers/cocktailsRouter";
 
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.static(path.join(config.publicPath, 'images')));
 app.use(cors());
 app.use(express.json());
 app.use('/users',usersRouter);
+app.use('/cocktails',cocktailsRouter)
 
 
 const run = async () => {
