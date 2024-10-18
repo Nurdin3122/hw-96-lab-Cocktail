@@ -38,4 +38,20 @@ export const getAllCocktails = createAsyncThunk<Cocktail[]>(
         const response = await axiosApi.get('/cocktails');
         return response.data
     }
+);
+
+export const getOneCocktail = createAsyncThunk<Cocktail>(
+    "cocktails/getOneCocktail",
+    async (id) => {
+        const user = localStorage.getItem('persist:cocktail-app:user');
+        const UserJsonParse = JSON.parse(user);
+        const token = JSON.parse(UserJsonParse.user)
+
+        const response = await axiosApi.get(`/cocktails/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token.token}`
+            }
+        })
+        return response.data
+    }
 )

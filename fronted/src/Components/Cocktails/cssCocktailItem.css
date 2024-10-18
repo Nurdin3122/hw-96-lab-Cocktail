@@ -1,0 +1,8 @@
+.cocktail-image {
+    transition: all 0.3s ease;
+}
+
+.cocktail-image:hover {
+    border: 3px solid blue;
+    box-shadow: 0 0 10px blue;
+}

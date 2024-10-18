@@ -14,6 +14,23 @@ cocktailsRouter.get('/',async (req:Request,res:Response,next:NextFunction):Promi
     }
 });
 
+
+cocktailsRouter.get('/:id', auth,async (req:Request,res:Response,next:NextFunction):Promise<void>=> {
+    try {
+        const { id } = req.params;
+        const cocktail = await Cocktail.findById(id);
+        if (!cocktail) {
+             res.status(404).send({ error: 'Cocktail not found' });
+            return
+        }
+         res.send(cocktail);
+        return
+    } catch (error) {
+         return next(error)
+    }
+
+})
+
 cocktailsRouter.post('/',auth,imagesUpload.single('image'),async (req:RequestWithUser,res:Response,next:NextFunction) => {
     try {
         const user = req.user;

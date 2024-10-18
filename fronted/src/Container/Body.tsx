@@ -1,9 +1,10 @@
 import React from 'react';
+import BlockCocktails from "../Components/Cocktails/BlockCocktails";
 
 const Body = () => {
     return (
-        <div>
-
+        <div className="container-fluid">
+            <BlockCocktails/>
         </div>
     );
 };

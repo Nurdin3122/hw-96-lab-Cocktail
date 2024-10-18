@@ -40,12 +40,20 @@ const HeaderForLogin = () => {
                                     {user.displayName ? user.displayName : user.username}
                                 </p>
                                 <ul className="dropdown-menu text-center">
-                                    <li><Link to="/create-cocktail" className="btn btn-close-white mb-2">Add
-                                        cocktail</Link></li>
                                     <li>
-                                        <button type="button" className="btn btn-close-white"
-                                                onClick={handleLogout}>Logout
+                                        <Link to="/create-cocktail" className="btn btn-close-white mb-2">
+                                            Add cocktail
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <button type="button" className="btn btn-close-white" onClick={handleLogout}>
+                                            Logout
                                         </button>
+                                    </li>
+                                    <li>
+                                        <Link to="/all-cocktails" className="btn btn-close-white">
+                                            My cocktails
+                                        </Link>
                                     </li>
                                 </ul>
                             </li>
