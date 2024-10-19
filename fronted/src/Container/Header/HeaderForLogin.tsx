@@ -15,7 +15,7 @@ const HeaderForLogin = () => {
     };
 
     let cardImage = logoForAnonUser
-    if (!user.image) {
+    if (user.image) {
         cardImage = apiURL + "/" + user.image;
     }
 
