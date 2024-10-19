@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useParams} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {getOneCocktail} from "./CocktailsThunks";
+import {getOneCocktail, ratingCocktail} from "./CocktailsThunks";
 import {oneCocktailLoading, oneCocktailState} from "./CocktailsSlice";
 import Spinner from "../Spinner/Spinner";
 import imageNotAvailable from "../../assets/imageNotAvailab.jpg";
@@ -12,6 +12,7 @@ const InfoOfCocktail = () => {
     const dispatch = useAppDispatch();
     const loadingOneCocktail = useAppSelector(oneCocktailLoading);
     const cocktail = useAppSelector(oneCocktailState);
+    const [userRating, setUserRating] = useState<number>(0);
 
     let cardImage = imageNotAvailable
     if (cocktail && cocktail.image) {
@@ -21,6 +22,12 @@ const InfoOfCocktail = () => {
     useEffect(() => {
         dispatch(getOneCocktail(id));
     }, [id,dispatch]);
+
+    const handleRating = async (score: number) => {
+        setUserRating(score);
+        await  dispatch(ratingCocktail({ id, score }));
+       await dispatch(getOneCocktail(id));
+    };
 
     if (!cocktail) {
         return <div>Коктейль не найден.</div>;
@@ -65,6 +72,28 @@ const InfoOfCocktail = () => {
                             <p>
                                 {cocktail.recipe}
                             </p>
+
+                            <span style={{fontSize: "16px"}}>Score:</span>
+                            <div>
+                                {[1, 2, 3, 4, 5].map(score => (
+                                    <button
+                                        key={score}
+                                        onClick={() => handleRating(score)}
+                                        style={{fontWeight: userRating === score ? 'bold' : 'normal'}}
+                                        className="btn btn-light m-2"
+                                    >
+                                        {score}
+                                    </button>
+                                ))}
+                                <ul>
+                                    {cocktail.ratings.map((ratingItem, index) => (
+                                        <li key={index}>
+                                           your last score: {ratingItem.score}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
                         </div>
                     </div>
                 )

@@ -73,6 +73,42 @@ cocktailsRouter.post('/',auth,imagesUpload.single('image'),async (req:RequestWit
     }
 });
 
+
+cocktailsRouter.post('/:id/rating', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+        const cocktailId = req.params.id;
+        const { score } = req.body;
+
+        if (!score || score < 1 || score > 5) {
+             res.status(400).send({ error: 'Invalid score. Must be between 1 and 5.' });
+            return
+        }
+
+        const cocktail = await Cocktail.findById(cocktailId);
+        if (!cocktail) {
+             res.status(404).send({ error: 'Cocktail not found' });
+            return
+        }
+
+        const existingRatingIndex = cocktail.ratings.findIndex(rating => rating.user.equals(req.user!._id));
+
+        if (existingRatingIndex !== -1) {
+            cocktail.ratings[existingRatingIndex].score = score;
+        } else {
+            cocktail.ratings.push({ user: req.user!._id, score });
+        }
+
+
+        await cocktail.save();
+        res.status(200).send({ message: 'Rating saved successfully', ratings: cocktail.ratings });
+    } catch (error) {
+        return next(error);
+    }
+});
+
+
+
+
 cocktailsRouter.delete("/:id", auth, permit('admin'), async (req:RequestWithUser,res:Response,next:NextFunction):Promise<void> => {
     try {
         const cocktailID = req.params.id;
@@ -80,8 +116,7 @@ cocktailsRouter.delete("/:id", auth, permit('admin'), async (req:RequestWithUser
          res.status(200).send({ message: 'Cocktail deleted successfully' });
         return
     } catch (error) {
-         res.status(500).send({ error: 'Failed to delete cocktail' });
-        return
+        return next(error);
     }
 });
 
@@ -102,8 +137,7 @@ cocktailsRouter.patch("/:id/togglePublished", auth, permit("admin"), async (req:
          res.status(200).send(cocktail);
         return
     } catch (error) {
-         res.status(500).send({ message: 'Something went wrong' });
-        return
+        return next(error);
     }
 });
 

@@ -1,4 +1,4 @@
-import { Cocktail } from "../../Types";
+import {Cocktail } from "../../Types";
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
 import {
@@ -6,7 +6,7 @@ import {
     deleteCocktail,
     getAllCocktails,
     getOneCocktail,
-    getPublishedCocktails, isPublishedCocktail
+    getPublishedCocktails, isPublishedCocktail,
 } from "./CocktailsThunks";
 
 export interface cocktailState {
@@ -116,8 +116,6 @@ export const CocktailSlice = createSlice<cocktailState>({
             state.cocktailPublishedLoading = false;
             state.registerError = true;
         });
-
-
     }
 });
 
@@ -125,7 +123,6 @@ export const CocktailReducer = CocktailSlice.reducer;
 export const cocktailState = (state: RootState) => state.cocktail.cocktails;
 export const oneCocktailState = (state: RootState) => state.cocktail.cocktail;
 export const isPublishedCocktails = (state: RootState) => state.cocktail.publishedCocktails;
-
 
 export const cocktailLoading = (state: RootState) => state.cocktail.loading;
 export const oneCocktailLoading = (state: RootState) => state.cocktail.loadingOneCocktail;

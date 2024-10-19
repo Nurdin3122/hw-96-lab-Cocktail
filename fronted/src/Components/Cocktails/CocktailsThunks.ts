@@ -57,6 +57,23 @@ export const getOneCocktail = createAsyncThunk<Cocktail>(
     }
 );
 
+export const ratingCocktail = createAsyncThunk(
+    "cocktail/ratingCocktail",
+    async ({ id, score }) => {
+            const user = localStorage.getItem("persist:cocktail-app:user");
+            const UserJsonParse = JSON.parse(user!);
+            const token = JSON.parse(UserJsonParse.user);
+
+            const response = await axiosApi.post(`/cocktails/${id}/rating`, {score} , {
+                headers: {
+                    Authorization: `Bearer ${token.token}`,
+                },
+            });
+
+            return response.data;
+    }
+);
+
 export const isPublishedCocktail = createAsyncThunk(
     "cocktail/isPublishedCocktail",
     async (id:string) => {

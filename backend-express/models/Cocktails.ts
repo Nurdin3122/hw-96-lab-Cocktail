@@ -36,6 +36,29 @@ const CocktailSchema = new Schema({
         }],
         required: true,
     },
+    ratings: {
+        type: [{
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+                required: true,
+                validate: {
+                    validator: async (value: Types.ObjectId) => {
+                        const userExists = await User.findById(value);
+                        return Boolean(userExists);
+                    },
+                    message: 'user does not exist!',
+                },
+            },
+            score: {
+                type: Number,
+                min: 1,
+                max: 5,
+                required: true,
+            },
+        }],
+        default: [],
+    },
 })
 
 const Cocktail = mongoose.model('Cocktail',CocktailSchema);
